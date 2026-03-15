@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadWeather() {
     try {
         // Using wttr.in - free weather API (no key required)
-        const response = await fetch('https://wttr.in/Phang+Nga?format=j1');
+// Thung Song district, Nakhon Si Thammarat province
+        const response = await fetch('https://wttr.in/Thung+Song,Nakhon+Si+Thammarat?format=j1');
         const data = await response.json();
         
         if (data.current_condition && data.current_condition[0]) {
@@ -132,7 +133,7 @@ function renderBookings(selectedDate) {
         const remarkHtml = booking.remark ? 
             `<div class="detail-item remark">📝 ${booking.remark}</div>` : '';
         
-        const nameDisplay = booking.name && booking.name.trim() ? booking.name : '(ยังไม่มีผู้จอง)';
+        const nameDisplay = booking.name && booking.name.trim() ? booking.name : 'ไม่ได้ใส่ชื่อผู้จอง';
         
         html += `
             <div class="booking-card">
