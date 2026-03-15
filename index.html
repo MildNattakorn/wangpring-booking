@@ -49,32 +49,6 @@
         <p>📡 ข้อมูลอัปเดตอัตโนมัติ</p>
     </footer>
 
-    <!-- Modal for adding note -->
-    <div id="noteModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeNoteModal()">&times;</span>
-            <h3>📝 เพิ่มโน๊ต</h3>
-            <input type="hidden" id="modalRoomKey">
-            <textarea id="noteText" placeholder="พิมพ์โน๊ตที่ต้องการ..."></textarea>
-            <div class="modal-buttons">
-                <button class="btn-cancel" onclick="closeNoteModal()">ยกเลิก</button>
-                <button class="btn-save" onclick="saveNote()">บันทึก</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for viewing note -->
-    <div id="viewNoteModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeViewModal()">&times;</span>
-            <h3>📝 โน๊ต</h3>
-            <div id="viewNoteContent"></div>
-            <div class="modal-buttons">
-                <button class="btn-close" onclick="closeViewModal()">ปิด</button>
-            </div>
-        </div>
-    </div>
-
     <script src="app.js"></script>
 </body>
 </html>
