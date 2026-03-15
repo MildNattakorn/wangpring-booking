@@ -1,11 +1,9 @@
-// Booking Dashboard - Real-time with Notes from Google Sheets
+// Booking Dashboard - Real-time with Notes (localStorage)
 let allBookings = [];
-let allNotes = {};
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
-    await loadNotes();
     await loadWeather();
     
     const today = new Date();
@@ -47,36 +45,7 @@ async function loadWeather() {
             }
         }
     } catch (error) {
-        console.error('Weather error:', error);
         document.getElementById('condition').textContent = 'ไม่ทราบ';
-    }
-}
-
-async function loadNotes() {
-    try {
-        const response = await fetch('https://docs.google.com/spreadsheets/d/1DrzX4RmtY63kVHWUCXwO89Jbcq4zTF2HAdEY-7QKJ6Y/gviz/tq?tqx=out:json&sheet=Notes');
-        const text = await response.text();
-        
-        // Parse JSON from Google Sheets format
-        const jsonMatch = text.match(/\{.*\}/);
-        if (jsonMatch) {
-            const json = JSON.parse(jsonMatch[0]);
-            if (json.table && json.table.rows) {
-                json.table.rows.forEach((row, index) => {
-                    if (index === 0) return; // Skip header
-                    const date = row.c[0]?.v;
-                    const room = row.c[1]?.v;
-                    const note = row.c[2]?.v;
-                    if (date && room && note) {
-                        const key = `${date}_${room}`;
-                        allNotes[key] = note;
-                    }
-                });
-            }
-        }
-        console.log('Loaded notes:', Object.keys(allNotes).length);
-    } catch (error) {
-        console.error('Notes error:', error);
     }
 }
 
@@ -116,8 +85,57 @@ function formatDisplayDate(dateStr) {
     return `${parseInt(parts[0])} ${months[parseInt(parts[1]) - 1]} ${parseInt(parts[2])}`;
 }
 
-function getNoteKey(booking, selectedDate) {
+function getRoomKey(booking, selectedDate) {
     return `${selectedDate}_${booking.room}`;
+}
+
+function getNote(key) {
+    const notes = JSON.parse(localStorage.getItem('bookingNotes') || '{}');
+    return notes[key] || '';
+}
+
+function saveNoteToStorage(key, note) {
+    const notes = JSON.parse(localStorage.getItem('bookingNotes') || '{}');
+    if (note && note.trim()) {
+        notes[key] = note.trim();
+    } else {
+        delete notes[key];
+    }
+    localStorage.setItem('bookingNotes', JSON.stringify(notes));
+}
+
+function openNoteModal(roomKey, currentNote) {
+    document.getElementById('modalRoomKey').value = roomKey;
+    document.getElementById('noteText').value = currentNote || '';
+    document.getElementById('noteModal').style.display = 'block';
+}
+
+function closeNoteModal() {
+    document.getElementById('noteModal').style.display = 'none';
+}
+
+function saveNote() {
+    const key = document.getElementById('modalRoomKey').value;
+    const note = document.getElementById('noteText').value;
+    saveNoteToStorage(key, note);
+    closeNoteModal();
+    const selectedDate = document.getElementById('datePicker').value;
+    renderBookings(selectedDate);
+}
+
+function openViewNote(note) {
+    document.getElementById('viewNoteContent').textContent = note;
+    document.getElementById('viewNoteModal').style.display = 'block';
+}
+
+function closeViewModal() {
+    document.getElementById('viewNoteModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
 }
 
 function renderBookings(selectedDate) {
@@ -146,8 +164,8 @@ function renderBookings(selectedDate) {
     let html = '';
     
     validBookings.forEach(booking => {
-        const noteKey = getNoteKey(booking, selectedDate);
-        const note = allNotes[noteKey] || '';
+        const roomKey = getRoomKey(booking, selectedDate);
+        const note = getNote(roomKey);
         const hasNote = note && note.trim() !== '';
         
         const remarkHtml = booking.remark ? 
@@ -156,8 +174,12 @@ function renderBookings(selectedDate) {
         const nameDisplay = booking.name && booking.name.trim() ? booking.name : 'ไม่ได้ใส่ชื่อผู้จอง';
         
         const noteSection = hasNote 
-            ? `<div class="note-section"><span class="note-indicator">📝 มีโน๊ต</span></div>`
-            : '';
+            ? `<div class="note-section">
+                    <button class="note-indicator" onclick="openViewNote('${note.replace(/'/g, "\\'")}')">📝 มีโน๊ต</button>
+               </div>`
+            : `<div class="note-section">
+                    <button class="note-btn" onclick="openNoteModal('${roomKey}', '')">➕ โน๊ต</button>
+               </div>`;
         
         html += `
             <div class="booking-card">
