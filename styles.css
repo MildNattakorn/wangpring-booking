@@ -12,10 +12,18 @@ body {
 }
 
 header {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     color: white;
     margin-bottom: 20px;
     padding: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-left {
+    text-align: left;
 }
 
 header h1 {
@@ -25,6 +33,42 @@ header h1 {
 
 header p {
     font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+/* Weather Card */
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.weather-card {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 10px 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.weather-icon {
+    font-size: 2rem;
+}
+
+.weather-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.temp {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.condition {
+    font-size: 0.75rem;
     opacity: 0.9;
 }
 
@@ -183,7 +227,16 @@ footer {
 }
 
 /* Responsive */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-left {
+        text-align: center;
+    }
+    
     header h1 {
         font-size: 1.5rem;
     }

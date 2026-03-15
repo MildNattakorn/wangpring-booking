@@ -4,6 +4,7 @@ let allBookings = [];
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
+    await loadWeather();
     
     // Set today's date
     const today = new Date();
@@ -18,6 +19,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderBookings(e.target.value);
     });
 });
+
+async function loadWeather() {
+    try {
+        // Using wttr.in - free weather API (no key required)
+        const response = await fetch('https://wttr.in/Phang+Nga?format=j1');
+        const data = await response.json();
+        
+        if (data.current_condition && data.current_condition[0]) {
+            const current = data.current_condition[0];
+            const temp = current.temp_C;
+            const condition = current.weatherDesc[0].value;
+            
+            // Update UI
+            document.getElementById('temp').textContent = temp + '°C';
+            document.getElementById('condition').textContent = condition;
+            
+            // Set icon based on condition
+            const icon = document.getElementById('weatherIcon');
+            const lowerCond = condition.toLowerCase();
+            if (lowerCond.includes('sun') || lowerCond.includes('clear')) {
+                icon.textContent = '☀️';
+            } else if (lowerCond.includes('cloud') || lowerCond.includes('overcast')) {
+                icon.textContent = '⛅';
+            } else if (lowerCond.includes('rain') || lowerCond.includes('drizzle')) {
+                icon.textContent = '🌧️';
+            } else if (lowerCond.includes('thunder') || lowerCond.includes('storm')) {
+                icon.textContent = '⛈️';
+            } else if (lowerCond.includes('fog') || lowerCond.includes('mist')) {
+                icon.textContent = '🌫️';
+            }
+        }
+    } catch (error) {
+        console.error('Weather error:', error);
+        document.getElementById('condition').textContent = 'ไม่ทราบ';
+    }
+}
 
 async function loadData() {
     try {
@@ -76,8 +113,8 @@ function renderBookings(selectedDate) {
         return bookingDate === selectedDate;
     });
     
-    // Filter out empty
-    const validBookings = filtered.filter(b => b.name && b.name.trim() !== '');
+    // Filter - must have room
+    const validBookings = filtered.filter(b => b.room && b.room.trim() !== '');
     
     if (validBookings.length === 0) {
         container.innerHTML = `<p class="no-data">ไม่มีรายการจองในวันที่ ${formatDisplayDate(selectedDate.replace(/-/g, '/'))}</p>`;
@@ -95,11 +132,13 @@ function renderBookings(selectedDate) {
         const remarkHtml = booking.remark ? 
             `<div class="detail-item remark">📝 ${booking.remark}</div>` : '';
         
+        const nameDisplay = booking.name && booking.name.trim() ? booking.name : '(ยังไม่มีผู้จอง)';
+        
         html += `
             <div class="booking-card">
                 <div class="booking-header">
                     <span class="room-badge">${booking.room || '-'}</span>
-                    <span class="booking-name">${booking.name}</span>
+                    <span class="booking-name">${nameDisplay}</span>
                 </div>
                 <div class="booking-details">
                     <div class="detail-item">💰 มัดจำ: ${parseInt(booking.deposit || 0).toLocaleString()} บาท</div>
