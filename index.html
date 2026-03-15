@@ -13,6 +13,7 @@
             <p>ตารางจองห้องพักประจำวัน</p>
         </div>
         <div class="header-right">
+            <button class="refresh-btn" onclick="refreshData()">🔄 รีเฟรช</button>
             <div class="weather-card">
                 <span class="weather-icon" id="weatherIcon">⛅</span>
                 <div class="weather-info">
@@ -46,7 +47,7 @@
     </main>
 
     <footer>
-        <p>📡 ข้อมูลอัปเดตอัตโนมัติ</p>
+        <p>📡 ข้อมูลอัปเดตอัตโนมัติ | ⏰ อัปเดตล่าสุด: <span id="lastUpdate">-</span></p>
     </footer>
 
     <script src="app.js"></script>

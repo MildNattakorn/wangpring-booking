@@ -1,9 +1,11 @@
 // Booking Dashboard - Real-time with Notes
 let allBookings = [];
+let lastUpdateTime = '';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
     await loadWeather();
+    updateLastUpdateTime();
     
     const today = new Date();
     const formattedDate = formatDateForInput(today);
@@ -15,6 +17,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderBookings(e.target.value);
     });
 });
+
+function updateLastUpdateTime() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const timeStr = `${hours}:${minutes}:${seconds}`;
+    document.getElementById('lastUpdate').textContent = timeStr;
+    lastUpdateTime = timeStr;
+}
+
+async function refreshData() {
+    // Show loading
+    const btn = document.querySelector('.refresh-btn');
+    btn.style.opacity = '0.7';
+    
+    await loadData();
+    updateLastUpdateTime();
+    
+    // Re-render
+    const selectedDate = document.getElementById('datePicker').value;
+    renderBookings(selectedDate);
+    
+    // Reset button
+    btn.style.opacity = '1';
+}
 
 async function loadWeather() {
     try {
@@ -92,7 +120,6 @@ function renderBookings(selectedDate) {
         return;
     }
     
-    // Show ALL rooms with bookings (even without guest name)
     const filtered = allBookings.filter(booking => {
         const bookingDate = convertToStandardDate(booking.date);
         return bookingDate === selectedDate && booking.room && booking.room.trim() !== '';
@@ -112,10 +139,8 @@ function renderBookings(selectedDate) {
         const remarkHtml = booking.remark ? 
             `<div class="detail-item remark">📝 ${booking.remark}</div>` : '';
         
-        // Show "ไม่ได้ใส่ชื่อผู้จอง" if no guest name
         const nameDisplay = booking.name && booking.name.trim() ? booking.name : 'ไม่ได้ใส่ชื่อผู้จอง';
         
-        // Add separator line between rooms
         const separator = index > 0 ? '<div class="room-separator"></div>' : '';
         
         html += separator + `
