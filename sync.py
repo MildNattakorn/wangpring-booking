@@ -42,6 +42,9 @@ def main():
         
         all_bookings = []
         
+        # Expected headers
+        expected_headers = ['Date', 'Name', 'Phone', 'Room', 'People', 'Remark', 'Deposit', 'Status', 'Note1', 'Note2']
+        
         # Process each month sheet
         month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May']
         
@@ -51,23 +54,28 @@ def main():
             # Check if it's a month sheet
             if sheet_name in month_names:
                 print(f"Processing sheet: {sheet_name}")
-                records = worksheet.get_all_records()
+                
+                # Get all records with expected headers
+                try:
+                    records = worksheet.get_all_records(expected_headers=expected_headers)
+                except Exception as e:
+                    print(f"Warning: {e}, trying without expected headers")
+                    records = worksheet.get_all_records()
                 
                 for row in records:
-                    # Get date from column B (index 1)
-                    date = row.get('Date', '').strip() if row.get('Date') else ''
-                    # Get room from column E (index 4)
-                    room = row.get('Room', '').strip() if row.get('Room') else ''
+                    # Get date and room
+                    date = str(row.get('Date', '')).strip() if row.get('Date') else ''
+                    room = str(row.get('Room', '')).strip() if row.get('Room') else ''
                     
                     # Only include if both date and room exist
                     if date and room:
                         booking = {
                             'date': date,
                             'room': room,
-                            'name': row.get('Name', '').strip() if row.get('Name') else '',
-                            'people': row.get('People', '').strip() if row.get('People') else '',
-                            'deposit': row.get('Deposit', '').strip() if row.get('Deposit') else '',
-                            'remark': row.get('Remark', '').strip() if row.get('Remark') else ''
+                            'name': str(row.get('Name', '')).strip() if row.get('Name') else '',
+                            'people': str(row.get('People', '')).strip() if row.get('People') else '',
+                            'deposit': str(row.get('Deposit', '')).strip() if row.get('Deposit') else '',
+                            'remark': str(row.get('Remark', '')).strip() if row.get('Remark') else ''
                         }
                         all_bookings.append(booking)
         
@@ -80,6 +88,8 @@ def main():
         
     except Exception as e:
         print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
         return 1
 
 if __name__ == '__main__':
