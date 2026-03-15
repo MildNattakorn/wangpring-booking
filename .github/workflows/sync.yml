@@ -1,4 +1,4 @@
-name: Auto Sync Google Sheets
+#name: Auto Sync Google Sheets
 
 on:
   schedule:
@@ -9,19 +9,18 @@ on:
     branches:
       - main
 
+# DISABLED - Service Account access issue
+# To re-enable, fix Service Account permissions in Google Sheets
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    if: false  # Disabled
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
