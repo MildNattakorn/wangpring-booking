@@ -36,7 +36,6 @@ header p {
     opacity: 0.9;
 }
 
-/* Weather Card */
 .header-right {
     display: flex;
     align-items: center;
@@ -91,7 +90,6 @@ h2 {
     font-size: 1.1rem;
 }
 
-/* Date Selector */
 .date-selector {
     display: flex;
     align-items: center;
@@ -112,7 +110,6 @@ h2 {
     font-family: inherit;
 }
 
-/* Summary Card - Big */
 .summary {
     display: flex;
     justify-content: center;
@@ -134,10 +131,6 @@ h2 {
     font-size: 2.5rem;
 }
 
-.summary-info {
-    text-align: left;
-}
-
 .summary-value {
     font-size: 3rem;
     font-weight: bold;
@@ -151,7 +144,6 @@ h2 {
     display: block;
 }
 
-/* Booking Cards */
 .bookings-list {
     display: flex;
     flex-direction: column;
@@ -210,11 +202,153 @@ h2 {
     font-size: 0.8rem;
 }
 
+/* Note button */
+.note-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed #ddd;
+}
+
+.note-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.note-btn:hover {
+    background: #5a6268;
+}
+
+.note-indicator {
+    background: #ffc107;
+    color: #333;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.note-indicator:hover {
+    background: #e0a800;
+}
+
 .loading, .no-data {
     text-align: center;
     color: #777;
     padding: 20px;
     font-size: 0.95rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.modal-content textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: none;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.btn-cancel, .btn-close {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-save {
+    background: #11998e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-cancel:hover {
+    background: #5a6268;
+}
+
+.btn-save:hover {
+    background: #0d7a6e;
+}
+
+#viewNoteContent {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    color: #333;
+    min-height: 60px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 footer {
@@ -226,7 +360,6 @@ footer {
     font-size: 0.85rem;
 }
 
-/* Responsive */
 @media (max-width: 500px) {
     header {
         flex-direction: column;
@@ -251,5 +384,9 @@ footer {
     
     .booking-details {
         grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 30% auto;
     }
 }
