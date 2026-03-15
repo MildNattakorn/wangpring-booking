@@ -390,3 +390,26 @@ footer {
         margin: 30% auto;
     }
 }
+
+/* Add Note Button */
+.add-note-section {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.add-note-btn {
+    display: inline-block;
+    background: #ffc107;
+    color: #333;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 3px 10px rgba(255, 193, 7, 0.4);
+}
+
+.add-note-btn:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+}
