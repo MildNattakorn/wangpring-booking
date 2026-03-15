@@ -29,19 +29,26 @@ function updateLastUpdateTime() {
 }
 
 async function refreshData() {
-    // Show loading
     const btn = document.querySelector('.refresh-btn');
-    btn.style.opacity = '0.7';
+    btn.innerHTML = '⏳ กำลังโหลด...';
     
-    await loadData();
-    updateLastUpdateTime();
-    
-    // Re-render
-    const selectedDate = document.getElementById('datePicker').value;
-    renderBookings(selectedDate);
-    
-    // Reset button
-    btn.style.opacity = '1';
+    try {
+        await loadData();
+        updateLastUpdateTime();
+        
+        const selectedDate = document.getElementById('datePicker').value;
+        renderBookings(selectedDate);
+        
+        btn.innerHTML = '✓ สำเร็จ!';
+        setTimeout(() => {
+            btn.innerHTML = '🔄 รีเฟรช';
+        }, 1500);
+    } catch (error) {
+        btn.innerHTML = '❌ ผิดพลาด';
+        setTimeout(() => {
+            btn.innerHTML = '🔄 รีเฟรช';
+        }, 2000);
+    }
 }
 
 async function loadWeather() {
