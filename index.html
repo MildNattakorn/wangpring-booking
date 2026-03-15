@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วังปริงแคมป์ - ตารางจอง</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>🏕️ วังปริงแคมป์ ทุ่งสง</h1>
+        <p>ตารางจองห้องพักประจำวัน</p>
+    </header>
+
+    <main>
+        <section class="date-selector">
+            <label for="datePicker">📅 เลือกวันที่:</label>
+            <input type="date" id="datePicker">
+        </section>
+
+        <section class="summary">
+            <div class="summary-card">
+                <span class="summary-icon">🏠</span>
+                <span class="summary-value" id="totalRooms">0</span>
+                <span class="summary-label">ห้องที่จองวันนี้</span>
+            </div>
+        </section>
+
+        <section class="bookings">
+            <h2>📋 รายการจอง</h2>
+            <div id="bookingsList">
+                <p class="loading">กรุณาเลือกวันที่...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>📡 ข้อมูลอัปเดตอัตโนมัติ</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
