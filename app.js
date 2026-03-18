@@ -160,7 +160,9 @@ async function loadData() {
     try {
         const response = await fetch('./data.json');
         allBookings = await response.json();
+        console.log('Loaded bookings:', allBookings.length);
     } catch (error) {
+        console.error('Error loading:', error);
         document.getElementById('bookingsList').innerHTML = '<p class="no-data">ไม่สามารถโหลดข้อมูลได้</p>';
     }
 }
@@ -195,6 +197,9 @@ function formatDisplayDate(dateStr) {
 function renderBookings(selectedDate) {
     const container = document.getElementById('bookingsList');
     
+    console.log('Selected date:', selectedDate);
+    console.log('Total bookings:', allBookings.length);
+    
     if (!selectedDate) {
         container.innerHTML = '<p class="no-data">กรุณาเลือกวันที่</p>';
         return;
@@ -202,8 +207,11 @@ function renderBookings(selectedDate) {
     
     const filtered = allBookings.filter(booking => {
         const bookingDate = convertToStandardDate(booking.date);
+        console.log('Comparing:', bookingDate, 'vs', selectedDate);
         return bookingDate === selectedDate && booking.room && booking.room.trim() !== '';
     });
+    
+    console.log('Filtered:', filtered.length);
     
     if (filtered.length === 0) {
         container.innerHTML = `<p class="no-data">ไม่มีรายการจองในวันที่ ${formatDisplayDate(selectedDate.replace(/-/g, '/'))}</p>`;
