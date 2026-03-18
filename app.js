@@ -12,7 +12,6 @@ const PERMISSIONS = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    checkAuth();
     await loadData();
     await loadWeather();
     updateLastUpdateTime();
@@ -26,8 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('datePicker').addEventListener('change', (e) => {
         renderBookings(e.target.value);
     });
-    
-    setupLogout();
 });
 
 // Check authentication status
