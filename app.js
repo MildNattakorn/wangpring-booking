@@ -1,8 +1,18 @@
 // Booking Dashboard - Real-time with Notes
 let allBookings = [];
 let lastUpdateTime = '';
+let currentUser = null;
+
+// Permission definitions
+const PERMISSIONS = {
+    view_bookings: 'ดูรายการจอง',
+    manage_bookings: 'จัดการจอง',
+    manage_users: 'จัดการผู้ใช้',
+    view_reports: 'ดูรายงาน'
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
+    checkAuth();
     await loadData();
     await loadWeather();
     updateLastUpdateTime();
@@ -16,7 +26,73 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('datePicker').addEventListener('change', (e) => {
         renderBookings(e.target.value);
     });
+    
+    setupLogout();
 });
+
+// Check authentication status
+function checkAuth() {
+    let userData = localStorage.getItem('currentUser');
+    const rememberMe = localStorage.getItem('rememberMe') === 'true';
+    
+    if (!userData) {
+        userData = sessionStorage.getItem('currentUser');
+    }
+    
+    if (userData) {
+        currentUser = JSON.parse(userData);
+        
+        if (rememberMe && !localStorage.getItem('currentUser')) {
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        
+        showUserSection();
+    } else {
+        showLoginSection();
+    }
+}
+
+// Show user info section
+function showUserSection() {
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('user-section').style.display = 'flex';
+    
+    document.getElementById('user-name').textContent = '🔹 ' + currentUser.position;
+    
+    applyPermissions();
+}
+
+// Show login link
+function showLoginSection() {
+    document.getElementById('user-section').style.display = 'none';
+    document.getElementById('login-section').style.display = 'block';
+}
+
+// Apply permission-based UI
+function applyPermissions() {
+    const permElements = document.querySelectorAll('[data-permission]');
+    permElements.forEach(el => {
+        const requiredPerm = el.dataset.permission;
+        if (currentUser && currentUser.permissions && currentUser.permissions.includes(requiredPerm)) {
+            el.style.display = '';
+        } else {
+            el.style.display = 'none';
+        }
+    });
+}
+
+// Setup logout button
+function setupLogout() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('rememberMe');
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+    }
+}
 
 function updateLastUpdateTime() {
     const now = new Date();
