@@ -1,148 +1,29 @@
-// Booking Dashboard - Real-time with Notes
+// Booking Dashboard - Real-time
 let allBookings = [];
-let lastUpdateTime = '';
-let currentUser = null;
 
-// Permission definitions
-const PERMISSIONS = {
-    view_bookings: 'ดูรายการจอง',
-    manage_bookings: 'จัดการจอง',
-    manage_users: 'จัดการผู้ใช้',
-    view_reports: 'ดูรายงาน'
-};
-
+// Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
     await loadWeather();
-    updateLastUpdateTime();
     
+    // Set today's date
     const today = new Date();
     const formattedDate = formatDateForInput(today);
     document.getElementById('datePicker').value = formattedDate;
     
+    // Show today's bookings
     renderBookings(formattedDate);
     
+    // Add event listener
     document.getElementById('datePicker').addEventListener('change', (e) => {
-        console.log('Date changed to:', e.target.value);
         renderBookings(e.target.value);
     });
-    
-    // Also listen for input event for immediate feedback
-    document.getElementById('datePicker').addEventListener('input', (e) => {
-        if (e.target.value) {
-            console.log('Date input:', e.target.value);
-            renderBookings(e.target.value);
-        }
-    });
-}
-
-// Handle date change from HTML onchange attribute
-function handleDateChange(value) {
-    console.log('handleDateChange called:', value);
-    if (value) {
-        renderBookings(value);
-    }
-}
-
-// Check authentication status
-function checkAuth() {
-    let userData = localStorage.getItem('currentUser');
-    const rememberMe = localStorage.getItem('rememberMe') === 'true';
-    
-    if (!userData) {
-        userData = sessionStorage.getItem('currentUser');
-    }
-    
-    if (userData) {
-        currentUser = JSON.parse(userData);
-        
-        if (rememberMe && !localStorage.getItem('currentUser')) {
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
-        
-        showUserSection();
-    } else {
-        showLoginSection();
-    }
-}
-
-// Show user info section
-function showUserSection() {
-    document.getElementById('login-section').style.display = 'none';
-    document.getElementById('user-section').style.display = 'flex';
-    
-    document.getElementById('user-name').textContent = '🔹 ' + currentUser.position;
-    
-    applyPermissions();
-}
-
-// Show login link
-function showLoginSection() {
-    document.getElementById('user-section').style.display = 'none';
-    document.getElementById('login-section').style.display = 'block';
-}
-
-// Apply permission-based UI
-function applyPermissions() {
-    const permElements = document.querySelectorAll('[data-permission]');
-    permElements.forEach(el => {
-        const requiredPerm = el.dataset.permission;
-        if (currentUser && currentUser.permissions && currentUser.permissions.includes(requiredPerm)) {
-            el.style.display = '';
-        } else {
-            el.style.display = 'none';
-        }
-    });
-}
-
-// Setup logout button
-function setupLogout() {
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('rememberMe');
-            sessionStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
-        });
-    }
-}
-
-function updateLastUpdateTime() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const timeStr = `${hours}:${minutes}:${seconds}`;
-    document.getElementById('lastUpdate').textContent = timeStr;
-    lastUpdateTime = timeStr;
-}
-
-async function refreshData() {
-    const btn = document.querySelector('.refresh-btn');
-    btn.innerHTML = '⏳ กำลังโหลด...';
-    
-    try {
-        await loadData();
-        updateLastUpdateTime();
-        
-        const selectedDate = document.getElementById('datePicker').value;
-        renderBookings(selectedDate);
-        
-        btn.innerHTML = '✓ สำเร็จ!';
-        setTimeout(() => {
-            btn.innerHTML = '🔄 รีเฟรช';
-        }, 1500);
-    } catch (error) {
-        btn.innerHTML = '❌ ผิดพลาด';
-        setTimeout(() => {
-            btn.innerHTML = '🔄 รีเฟรช';
-        }, 2000);
-    }
-}
+});
 
 async function loadWeather() {
     try {
+        // Using wttr.in - free weather API (no key required)
+// Thung Song district, Nakhon Si Thammarat province
         const response = await fetch('https://wttr.in/Thung+Song,Nakhon+Si+Thammarat?format=j1');
         const data = await response.json();
         
@@ -151,9 +32,11 @@ async function loadWeather() {
             const temp = current.temp_C;
             const condition = current.weatherDesc[0].value;
             
+            // Update UI
             document.getElementById('temp').textContent = temp + '°C';
             document.getElementById('condition').textContent = condition;
             
+            // Set icon based on condition
             const icon = document.getElementById('weatherIcon');
             const lowerCond = condition.toLowerCase();
             if (lowerCond.includes('sun') || lowerCond.includes('clear')) {
@@ -169,6 +52,7 @@ async function loadWeather() {
             }
         }
     } catch (error) {
+        console.error('Weather error:', error);
         document.getElementById('condition').textContent = 'ไม่ทราบ';
     }
 }
@@ -177,10 +61,11 @@ async function loadData() {
     try {
         const response = await fetch('./data.json');
         allBookings = await response.json();
-        console.log('Loaded bookings:', allBookings.length);
+        console.log('Loaded:', allBookings.length, 'bookings');
     } catch (error) {
-        console.error('Error loading:', error);
-        document.getElementById('bookingsList').innerHTML = '<p class="no-data">ไม่สามารถโหลดข้อมูลได้</p>';
+        console.error('Error loading data:', error);
+        document.getElementById('bookingsList').innerHTML = 
+            '<p class="no-data">ไม่สามารถโหลดข้อมูลได้</p>';
     }
 }
 
@@ -193,10 +78,8 @@ function formatDateForInput(date) {
 
 function convertToStandardDate(dateStr) {
     if (!dateStr) return '';
-    // Handle both DD/MM/YYYY and YYYY-MM-DD
-    if (dateStr.includes('-')) {
-        return dateStr; // Already YYYY-MM-DD
-    }
+    
+    // Input: DD/MM/YYYY
     const parts = dateStr.split('/');
     if (parts.length === 3) {
         const day = parts[0].padStart(2, '0');
@@ -211,51 +94,51 @@ function formatDisplayDate(dateStr) {
     if (!dateStr) return '-';
     const parts = dateStr.split('/');
     if (parts.length !== 3) return dateStr;
-    const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+    
+    const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
+                   'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
     return `${parseInt(parts[0])} ${months[parseInt(parts[1]) - 1]} ${parseInt(parts[2])}`;
 }
 
 function renderBookings(selectedDate) {
     const container = document.getElementById('bookingsList');
     
-    console.log('Selected date:', selectedDate);
-    console.log('Total bookings:', allBookings.length);
-    
     if (!selectedDate) {
         container.innerHTML = '<p class="no-data">กรุณาเลือกวันที่</p>';
         return;
     }
     
+    // Filter by date
     const filtered = allBookings.filter(booking => {
         const bookingDate = convertToStandardDate(booking.date);
-        console.log('Comparing:', bookingDate, 'vs', selectedDate);
-        return bookingDate === selectedDate && booking.room && booking.room.trim() !== '';
+        return bookingDate === selectedDate;
     });
     
-    console.log('Filtered:', filtered.length);
+    // Filter - must have room
+    const validBookings = filtered.filter(b => b.room && b.room.trim() !== '');
     
-    if (filtered.length === 0) {
+    if (validBookings.length === 0) {
         container.innerHTML = `<p class="no-data">ไม่มีรายการจองในวันที่ ${formatDisplayDate(selectedDate.replace(/-/g, '/'))}</p>`;
         document.getElementById('totalRooms').textContent = '0';
         return;
     }
     
-    document.getElementById('totalRooms').textContent = filtered.length;
+    // Show total rooms
+    document.getElementById('totalRooms').textContent = validBookings.length;
     
+    // Generate HTML - with remark
     let html = '';
     
-    filtered.forEach((booking, index) => {
+    validBookings.forEach(booking => {
         const remarkHtml = booking.remark ? 
             `<div class="detail-item remark">📝 ${booking.remark}</div>` : '';
         
         const nameDisplay = booking.name && booking.name.trim() ? booking.name : 'ไม่ได้ใส่ชื่อผู้จอง';
         
-        const separator = index > 0 ? '<div class="room-separator"></div>' : '';
-        
-        html += separator + `
+        html += `
             <div class="booking-card">
                 <div class="booking-header">
-                    <span class="room-badge">${booking.room}</span>
+                    <span class="room-badge">${booking.room || '-'}</span>
                     <span class="booking-name">${nameDisplay}</span>
                 </div>
                 <div class="booking-details">
