@@ -184,6 +184,8 @@ h2 {
     border-radius: 10px;
     padding: 12px;
     border-left: 4px solid #11998e;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 15px;
 }
 
 .booking-header {
@@ -245,6 +247,11 @@ footer {
     margin-top: 15px;
     padding: 10px;
     font-size: 0.85rem;
+}
+
+footer .weather-card {
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 /* Responsive */
