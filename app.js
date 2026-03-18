@@ -25,7 +25,10 @@ async function loadWeather() {
         // Using wttr.in - free weather API (no key required)
 // Thung Song district, Nakhon Si Thammarat province
         const response = await fetch('https://wttr.in/Thung+Song,Nakhon+Si+Thammarat?format=j1');
-        const data = await response.json();
+        const json = await response.json();
+        
+        // Data is wrapped in 'data' object
+        const data = json.data;
         
         if (data.current_condition && data.current_condition[0]) {
             const current = data.current_condition[0];
