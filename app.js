@@ -176,6 +176,10 @@ function formatDateForInput(date) {
 
 function convertToStandardDate(dateStr) {
     if (!dateStr) return '';
+    // Handle both DD/MM/YYYY and YYYY-MM-DD
+    if (dateStr.includes('-')) {
+        return dateStr; // Already YYYY-MM-DD
+    }
     const parts = dateStr.split('/');
     if (parts.length === 3) {
         const day = parts[0].padStart(2, '0');
