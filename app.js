@@ -34,6 +34,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderBookings(e.target.value);
         }
     });
+}
+
+// Handle date change from HTML onchange attribute
+function handleDateChange(value) {
+    console.log('handleDateChange called:', value);
+    if (value) {
+        renderBookings(value);
+    }
 });
 
 // Check authentication status

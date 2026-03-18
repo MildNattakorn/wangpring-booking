@@ -26,7 +26,7 @@
     <main>
         <section class="date-selector">
             <label for="datePicker">📅 เลือกวันที่:</label>
-            <input type="date" id="datePicker">
+            <input type="date" id="datePicker" onchange="handleDateChange(this.value)" oninput="handleDateChange(this.value)">
         </section>
 
         <section class="summary">
