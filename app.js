@@ -42,7 +42,7 @@ function handleDateChange(value) {
     if (value) {
         renderBookings(value);
     }
-});
+}
 
 // Check authentication status
 function checkAuth() {
