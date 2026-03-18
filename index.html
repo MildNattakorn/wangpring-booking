@@ -3,204 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>วังปริงแคมป์ทุ่งสง - ระบบจัดการ</title>
+    <title>วังปริงแคมป์ - ตารางจอง</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2d5a27 0%, #4a7c42 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .logo {
-            width: 120px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        
-        header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-        
-        .user-panel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 30px;
-            display: inline-flex;
-        }
-        
-        .user-position {
-            font-weight: 600;
-        }
-        
-        .logout-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        .menu-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        
-        .menu-section h2 {
-            color: #1a472a;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .menu-grid {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .menu-btn {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px 25px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid #dee2e6;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: #333;
-        }
-        
-        .menu-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border-color: #4a7c42;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-        }
-        
-        .menu-icon {
-            font-size: 2rem;
-        }
-        
-        .menu-text {
-            flex: 1;
-        }
-        
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a472a;
-        }
-        
-        .menu-desc {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 3px;
-        }
-        
-        .menu-arrow {
-            font-size: 1.2rem;
-            color: #4a7c42;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="logo.jpg" alt="วังปริงแคมป์" class="logo">
-            <h1>ระบบวังปริงแคมป์ทุ่งสง</h1>
-            
-            <div class="user-panel" id="user-panel">
-                <span class="user-position" id="user-position">Loading...</span>
-                <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+    <header>
+        <div class="header-left">
+            <h1>🏕️ วังปริงแคมป์ ทุ่งสง</h1>
+            <p>ตารางจองห้องพักประจำวัน</p>
+        </div>
+        <div class="header-right">
+            <div class="weather-card">
+                <span class="weather-icon" id="weatherIcon">⛅</span>
+                <div class="weather-info">
+                    <span class="temp" id="temp">--°C</span>
+                    <span class="condition" id="condition">กำลังโหลด...</span>
+                </div>
             </div>
-        </header>
-        
-        <section class="menu-section">
-            <h2>📋 เมนูหลัก</h2>
-            
-            <div class="menu-grid">
-                <a href="https://mildnattakorn.github.io/webapp-dashboard/" target="_blank" class="menu-btn">
-                    <span class="menu-icon">📅</span>
-                    <div class="menu-text">
-                        <div class="menu-title">ข้อมูลการจองห้องพัก</div>
-                        <div class="menu-desc">ดูและจัดการข้อมูลการจอง</div>
-                    </div>
-                    <span class="menu-arrow">→</span>
-                </a>
-                
-                <a href="index.html" class="menu-btn">
-                    <span class="menu-icon">📊</span>
-                    <div class="menu-text">
-                        <div class="menu-title">Dashboard</div>
-                        <div class="menu-desc">ภาพรวมการจองประจำวัน</div>
-                    </div>
-                    <span class="menu-arrow">→</span>
-                </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="date-selector">
+            <label for="datePicker">📅 เลือกวันที่:</label>
+            <input type="date" id="datePicker">
+        </section>
+
+        <section class="summary">
+            <div class="summary-card">
+                <span class="summary-icon">🏠</span>
+                <span class="summary-value" id="totalRooms">0</span>
+                <span class="summary-label">ห้องที่จองวันนี้</span>
             </div>
         </section>
-    </div>
 
-    <script>
-        let currentUser = null;
-        
-        function checkAuth() {
-            let userData = localStorage.getItem('currentUser');
-            const rememberMe = localStorage.getItem('rememberMe') === 'true';
-            
-            if (!userData) {
-                userData = sessionStorage.getItem('currentUser');
-            }
-            
-            if (userData) {
-                currentUser = JSON.parse(userData);
-                document.getElementById('user-position').textContent = '🔹 ' + currentUser.position;
-            } else {
-                window.location.href = 'login.html';
-            }
-        }
-        
-        function logout() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('rememberMe');
-            sessionStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
-        }
-        
-        checkAuth();
-    </script>
+        <section class="bookings">
+            <h2>📋 รายการจอง</h2>
+            <div id="bookingsList">
+                <p class="loading">กรุณาเลือกวันที่...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>📡 ข้อมูลอัปเดตอัตโนมัติ</p>
+    </footer>
+
+    <script src="app.js"></script>
 </body>
 </html>
