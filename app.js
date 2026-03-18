@@ -23,7 +23,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderBookings(formattedDate);
     
     document.getElementById('datePicker').addEventListener('change', (e) => {
+        console.log('Date changed to:', e.target.value);
         renderBookings(e.target.value);
+    });
+    
+    // Also listen for input event for immediate feedback
+    document.getElementById('datePicker').addEventListener('input', (e) => {
+        if (e.target.value) {
+            console.log('Date input:', e.target.value);
+            renderBookings(e.target.value);
+        }
     });
 });
 
